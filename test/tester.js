@@ -10,5 +10,6 @@ var params = {
 }
 
 DelS3(params, function (err, res){
+  if (err) return console.log(err);
   console.log('success');
 });

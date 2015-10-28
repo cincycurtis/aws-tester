@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 
-const GetCredentials = require('./getCredentials');
-const DeleteBucket = require('./deleteBucket');
+const GetCredentials = require('./lib/getCredentials');
+const DeleteBucket = require('./lib/deleteBucket');
 
 module.exports = function (params, done) {
   var s3 = new AWS.S3(GetCredentials(params));
@@ -15,6 +15,6 @@ module.exports = function (params, done) {
   DeleteBucket(params, s3, function (err, res) {
     if (err) return done(err, null);
 
-    return done(null,res);
+    return done(null, res);
   });
 };
