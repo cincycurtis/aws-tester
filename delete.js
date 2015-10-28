@@ -1,45 +1,69 @@
 const AWS = require('aws-sdk');
 const _ = require('underscore');
 
-var s3 = new AWS.S3({
-  accessKeyId: 'REDACTED',
-  secretAccessKey: 'REDACTED'
-});
+var s3;
 
-var bucket = '1445447202775';
+function getKeys (params) {
+  if (params.hasOwnProperty('accessKeyId') && params.hasOwnProperty('secretAccessKey')) {
+    return {
+      'accessKeyId': params.accessKeyId,
+      'secretAccessKey': params.secretAccessKey
+    };
+  } else {
+    throw new Error('Please provide access keys');
+  }
+}
 
-var params = {
-  Bucket: bucket
-};
+function deleteBucket (params, done) {
+  params = { Bucket: params.Bucket };
+  if (params.Bucket) {
+    s3.listObjects(params, function (err, res) {
+      var deleteParams;
+      var bucketObjectsKeys = [];
+      if (err) done(err, null);
 
-s3.listObjects(params, function (err, res) {
-  var deleteParams;
-  var bucketObjectsKeys = [];
-  if (err) console.log(err, err.stack);
+      res.Contents.forEach(function (elem) {
+        bucketObjectsKeys.push(_.pick(elem, 'Key'));
+      });
 
-  console.log(res.Contents);
+      deleteParams = {
+        Bucket: params.Bucket,
+        Delete: {
+          Objects: bucketObjectsKeys
+        }
+      };
 
-  res.Contents.forEach(function (elem) {
-    bucketObjectsKeys.push(_.pick(elem, 'Key'));
-  });
+      console.log('deleting objects from: %s', params.Bucket);
 
-  deleteParams = {
-    Bucket: bucket,
-    Delete: {
-      Objects: bucketObjectsKeys
-    }
-  };
+      s3.deleteObjects(deleteParams, function (err, data) {
+        if (err) return console.log(err);
 
-  console.log(bucketObjectsKeys);
-  console.log('deleting objects from: %s', bucket);
-
-  s3.deleteObjects(deleteParams, function (err, data) {
-    if (err) return console.log(err);
-
-    console.log('deleting bucket: %s', bucket);
-    s3.deleteBucket({'Bucket': bucket}, function (err, data) {
-      if (err) console.log(err);
-      else console.log('SUCCESS');
+        console.log('deleting bucket: %s', params.Bucket);
+        s3.deleteBucket({'Bucket': params.Bucket}, function (err, data) {
+          if (err) console.log(err);
+          else console.log('SUCCESS');
+        });
+      });
     });
+  } else {
+    done(new Error('S3 delete bucket params not valid'), null);
+  }
+
+  done(null, 'Success');
+}
+
+module.exports = function (params, done) {
+  s3 = new AWS.S3(getKeys(params));
+
+  if (!params.Bucket) {
+    done(new Error('"Bucket" not specified in params object'), null);
+  } else {
+    params = { Bucket: params.Bucket };
+  }
+
+  deleteBucket(params, function (err, res) {
+    if (err) return done(err, null);
+
+    return done(null,res);
   });
-});
+};

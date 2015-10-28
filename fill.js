@@ -1,15 +1,12 @@
 const AWS = require('aws-sdk');
 const _ = require('underscore');
 
-var s3 = new AWS.S3({
-  accessKeyId: 'REDACTED',
-  secretAccessKey: 'REDACTED'
-});
+var s3 = new AWS.S3(require('./secrets'));
 
-var bucket = '1445447202775';
+if (!process.argv[2]) throw new Error('Please supply bucket name!');
 
 var params = {
-  Bucket: bucket,
+  Bucket: process.argv[2],
   Key: 0,
   Body: ''
 };
