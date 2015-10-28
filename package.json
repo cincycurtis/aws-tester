@@ -13,6 +13,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "@modulus/standard": "^0.1.1"
+    "@modulus/standard": "^0.1.1",
+    "lab": "^7.0.0"
   }
 }
