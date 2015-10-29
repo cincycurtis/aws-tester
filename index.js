@@ -6,15 +6,9 @@ const DeleteBucket = require('./lib/deleteBucket');
 module.exports = function (params, done) {
   var s3 = new AWS.S3(GetCredentials(params));
 
-  if (!params.Bucket) {
-    done(new Error('"Bucket" not specified in params object'), null);
-  } else {
-    params = { Bucket: params.Bucket };
-  }
+  if (!params.Bucket) return done(new Error('"Bucket" not specified in params object'), null);
 
-  DeleteBucket(params, s3, function (err, res) {
-    if (err) return done(err, null);
+  params = { Bucket: params.Bucket };
 
-    return done(null, res);
-  });
+  DeleteBucket(s3, params, done);
 };
