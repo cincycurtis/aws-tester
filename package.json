@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "lab -c"
+    "test": "lab -c",
+    "lint": "mod-standard"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +16,8 @@
   "devDependencies": {
     "@modulus/standard": "^0.1.1",
     "code": "^1.5.0",
-    "lab": "^7.0.0"
+    "lab": "^7.0.0",
+    "proxyquire": "^1.7.3",
+    "sinon": "^1.17.2"
   }
 }

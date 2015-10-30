@@ -1,14 +1,19 @@
 const AWS = require('aws-sdk');
+const Assert = require('assert');
 
-const GetCredentials = require('./lib/getCredentials');
+
+const GetClient = require('./lib/getClient');
 const DeleteBucket = require('./lib/deleteBucket');
+const Helpers = require('./lib/helpers');
+
+var s3;
 
 module.exports = function (params, done) {
-  var s3 = new AWS.S3(GetCredentials(params));
+  Assert(Helpers.isObject(params), 'Params needs to be an object');
+  Assert(Helpers.isString(params.Bucket), '"Bucket" not specified in params object');
+  Assert(Helpers.isFunction(done), 'Must supply a callback');
 
-  if (!params.Bucket) return done(new Error('"Bucket" not specified in params object'), null);
+  s3 = GetClient(params);
 
-  params = { Bucket: params.Bucket };
-
-  DeleteBucket(s3, params, done);
+  DeleteBucket(s3, { Bucket: params.Bucket }, done);
 };

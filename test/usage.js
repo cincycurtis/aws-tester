@@ -13,4 +13,33 @@ describe('usage', function () {
     expect(Unbucket).to.be.instanceOf(Function);
     done();
   });
+
+  describe('requirements', function () {
+    it('requires an options object as the first param', function (done) {
+      var fn = function () {
+        Unbucket();
+      }
+
+      expect(fn).to.throw('Params needs to be an object');
+      done();
+    });
+
+    it('requires params.Bucket', function (done) {
+      var fn = function () {
+        Unbucket({});
+      };
+
+      expect(fn).to.throw('"Bucket" not specified in params object');
+      done();
+    });
+
+    it('requires a callback', function (done) {
+      var fn = function () {
+        Unbucket({Bucket:'test'});
+      };
+
+      expect(fn).to.throw('Must supply a callback');
+      done();
+    });
+  });
 });
