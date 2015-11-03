@@ -33,9 +33,37 @@ describe('usage', function () {
       done();
     });
 
+    it('requires params.accessKeyId', function (done) {
+      var fn = function () {
+        Unbucket({
+          Bucket: 'stuff',
+          secretAccessKey: 'myKey'
+        }, function (err, res) {return;});
+      };
+
+      expect(fn).to.throw('Please provide "accessKeyId" as a string');
+      done();
+    });
+
+    it('requires params.secretAccessKey', function (done) {
+      var fn = function () {
+        Unbucket({
+          Bucket: 'stuff',
+          accessKeyId: 'myId'
+        }, function (err, res) {return;});
+      };
+
+      expect(fn).to.throw('Please provide "secretAccessKey" as a string');
+      done();
+    });
+
     it('requires a callback', function (done) {
       var fn = function () {
-        Unbucket({Bucket:'test'});
+        Unbucket({
+          Bucket: 'stuff',
+          accessKeyId: 'myId',
+          secretAccessKey: 'myKey'
+        });
       };
 
       expect(fn).to.throw('Must supply a callback');

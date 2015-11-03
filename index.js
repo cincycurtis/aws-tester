@@ -11,6 +11,8 @@ var s3;
 module.exports = function (params, done) {
   Assert(Helpers.isObject(params), 'Params needs to be an object');
   Assert(Helpers.isString(params.Bucket), '"Bucket" not specified in params object');
+  Assert(Helpers.isString(params.accessKeyId), 'Please provide "accessKeyId" as a string');
+  Assert(Helpers.isString(params.secretAccessKey), 'Please provide "secretAccessKey" as a string');
   Assert(Helpers.isFunction(done), 'Must supply a callback');
 
   s3 = GetClient(params);

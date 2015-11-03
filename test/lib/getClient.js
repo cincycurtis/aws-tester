@@ -32,22 +32,4 @@ describe('Get Client', function () {
     expect(GetClient(goodParams)).to.be.instanceOf(Object);
     done();
   });
-
-  it('fails for bad params', function (done) {
-    function noAccessKeyId () {
-      GetClient({secretAccessKey: 'test'});
-    }
-
-    expect(noAccessKeyId).to.throw(Error, 'Please provide "accessKeyId" as a string');
-    done();
-  });
-
-  it('fails for bad params', function (done) {
-    function noSecretAccessKey() {
-      GetClient({accessKeyId: 'test'});
-    }
-
-    expect(noSecretAccessKey).to.throw(Error, 'Please provide "secretAccessKey" as a string');
-    done();
-  });
 });

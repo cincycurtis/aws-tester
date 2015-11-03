@@ -49,7 +49,11 @@ describe('Unbucket()', function () {
     });
 
     it('yields true', function (done) {
-      Unbucket({Bucket: 'stuff'}, function (err, res) {
+      Unbucket({
+        Bucket: 'stuff',
+        accessKeyId: 'myId',
+        secretAccessKey: 'myKey'
+      }, function (err, res) {
         expect(err).to.not.exist();
         expect(res).to.be.true();
         done();
@@ -64,7 +68,11 @@ describe('Unbucket()', function () {
     });
 
     it('yields an error', function (done) {
-      Unbucket({Bucket: 'stuff'}, function (err, res) {
+      Unbucket({
+        Bucket: 'stuff',
+        accessKeyId: 'myId',
+        secretAccessKey: 'myKey'
+      }, function (err, res) {
         expect(res).to.not.exist();
         expect(err).to.be.an.instanceOf(Error);
         expect(err.message).to.equal('Delete Bucket Fails');
